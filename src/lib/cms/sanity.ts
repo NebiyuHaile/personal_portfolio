@@ -4,23 +4,30 @@ import { createClient } from "@sanity/client"
 import imageUrlBuilder from "@sanity/image-url"
 import type { NormalizedData } from "@/src/content/loader"
 
-const client = createClient({
-  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || "",
-  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || "production",
-  useCdn: true,
-  apiVersion: "2024-01-01",
-  token: process.env.SANITY_API_TOKEN,
-})
+const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID
+const client = projectId
+  ? createClient({
+      projectId,
+      dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || "production",
+      useCdn: true,
+      apiVersion: "2024-01-01",
+      token: process.env.SANITY_API_TOKEN,
+    })
+  : null
 
-const builder = imageUrlBuilder(client)
+const builder = client ? imageUrlBuilder(client) : null
 
 export function urlFor(source: any) {
+  if (!builder) {
+    console.warn("[v0] Sanity not configured, cannot generate image URL")
+    return { url: () => "" }
+  }
   return builder.image(source)
 }
 
 export async function fetchFromSanity(): Promise<NormalizedData | null> {
   try {
-    if (!process.env.NEXT_PUBLIC_SANITY_PROJECT_ID) {
+    if (!client || !projectId) {
       console.log("[v0] Sanity not configured, skipping")
       return null
     }
