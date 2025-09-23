@@ -1,0 +1,135 @@
+{
+  "summary": {
+    "headline": "Software Engineer & Data Science Researcher",
+    "about": "Computer Science student at Minnesota State University with experience in full-stack development, machine learning, and research. Passionate about creating innovative solutions that bridge technology and real-world applications.",
+    "links": {
+      "email": "nebiyu.haile@mnsu.edu",
+      "phone": "(507)-469-4078",
+      "linkedin": "https://linkedin.com/in/nebiyuhaile",
+      "github": "https://github.com/NebiyuHaile"
+    }
+  },
+  "experience": [
+    {
+      "company": "Student Government @ Minnesota State University",
+      "role": "Software Engineer Intern (Project)",
+      "period": "Jan 2025 – May 2025",
+      "location": "Mankato, MN",
+      "bullets": [
+        "Developed a full-stack web application to digitalize the paper-based student government voting and attorney scheduling systems.",
+        "Built dynamic calendar views and appointment interfaces using FullCalendar and JSON-based data rendering.",
+        "Implemented session-based role access and modular routing for seamless navigation.",
+        "Utilized SQLite for lightweight storage of availability and appointment data."
+      ],
+      "links": {}
+    },
+    {
+      "company": "Minnesota State University - Mankato",
+      "role": "Data Science Engineer",
+      "period": "Aug 2024 – Dec 2024",
+      "location": "Mankato, MN",
+      "bullets": [
+        "Designed an ETL pipeline to create a facial image dataset for Butterfly Malar Rash (BMR) detection.",
+        "Developed CNN models using transfer learning for BMR detection.",
+        "Co-authored and published a peer-reviewed research paper on early detection of Systemic Lupus Erythematosus (SLE)."
+      ],
+      "links": {}
+    },
+    {
+      "company": "Minnesota State University - Mankato",
+      "role": "IT Student Consultant",
+      "period": "Aug 2024 – Present",
+      "location": "Mankato, MN",
+      "bullets": [
+        "Providing technical support, addressing software/hardware issues on Mac and Windows platforms.",
+        "Performing re-imaging, OS installations, and network troubleshooting for end-users.",
+        "Collaborating with IT teams to enhance support processes and reduce downtime."
+      ],
+      "links": {}
+    }
+  ],
+  "projects": [
+    {
+      "name": "NutriFitBot – AI Nutrition Chatbot",
+      "summary": "Developed a chatbot that delivers personalized meal plans, fitness tips, and answers to health-related questions using Google Gemini API.",
+      "period": "Jan 2025 – Mar 2025",
+      "tech": ["React", "Flask", "Google Gemini API", "REST", "CSS"],
+      "bullets": [
+        "Integrated Flask backend with a React frontend for real-time chat and structured response generation.",
+        "Improved UI/UX with chat bubbles, loading states, timestamps, and responsive design."
+      ],
+      "links": {}
+    },
+    {
+      "name": "E-Commerce Marketplace",
+      "summary": "Developed a full-stack online marketplace with React TypeScript frontend and a Node.js / Express backend.",
+      "period": "Mar 2025 – Present",
+      "tech": ["React", "TypeScript", "TailwindCSS", "Node.js", "Express"],
+      "bullets": [
+        "Built product CRUD (list, detail, add-to-cart, delete) with Tailwind CSS styling and React Context for state."
+      ],
+      "links": {}
+    },
+    {
+      "name": "Expense Tracker",
+      "summary": "Python app with Tkinter for managing expenses (add, edit, delete, search, totals, CSV export).",
+      "period": "Jul 2024",
+      "tech": ["Python", "Tkinter", "Matplotlib"],
+      "bullets": ["Data visualized using Matplotlib (bar and pie charts)."],
+      "links": {}
+    },
+    {
+      "name": "Weather App",
+      "summary": "Responsive web app leveraging OpenWeatherMap API for real-time weather data.",
+      "period": "Feb 2023",
+      "tech": ["HTML", "CSS", "JavaScript", "OpenWeatherMap API"],
+      "bullets": [
+        "Features dynamic search by city/location, Celsius/Fahrenheit support, current conditions, 3-day forecasts, and local time."
+      ],
+      "links": {}
+    }
+  ],
+  "skills": {
+    "groups": [
+      {
+        "title": "Languages",
+        "items": ["Python", "Java", "C", "SQL", "JavaScript", "HTML/CSS", "TypeScript"]
+      },
+      {
+        "title": "Frameworks & Libraries",
+        "items": ["React", "Next.js", "Flask", "TensorFlow", "pandas", "Matplotlib", "OpenCV"]
+      },
+      {
+        "title": "Tools & Technologies",
+        "items": ["Git", "VS Code", "PyCharm", "SQLite", "Node.js", "Express", "REST APIs"]
+      },
+      {
+        "title": "Specializations",
+        "items": ["Full-Stack Development", "Machine Learning", "Data Science", "Computer Vision", "ETL Pipelines"]
+      }
+    ]
+  },
+  "contact": {
+    "email": "nebiyu.haile@mnsu.edu",
+    "phone": "(507)-469-4078",
+    "socials": {
+      "linkedin": "https://linkedin.com/in/nebiyuhaile",
+      "github": "https://github.com/NebiyuHaile"
+    }
+  },
+  "education": {
+    "institution": "Minnesota State University",
+    "degree": "Bachelor of Science in Computer Science, Minor in Mathematics",
+    "period": "Dec 2026",
+    "location": "Mankato, MN",
+    "coursework": [
+      "Intro to Programming",
+      "Data Structures and Algorithms",
+      "Object-Oriented Programming",
+      "Computer Architecture",
+      "Operating Systems",
+      "Software Engineering",
+      "Parallel Computing"
+    ]
+  }
+}
