@@ -4,7 +4,7 @@
     "about": "Computer Science student at Minnesota State University with experience in full-stack development, machine learning, and research. Passionate about creating innovative solutions that bridge technology and real-world applications.",
     "links": {
       "email": "nebiyu.haile@mnsu.edu",
-      "phone": "(507)-469-4078",
+      "phone": "(507) 469-4078",
       "linkedin": "https://linkedin.com/in/nebiyuhaile",
       "github": "https://github.com/NebiyuHaile"
     }
@@ -12,26 +12,25 @@
   "experience": [
     {
       "company": "Student Government @ Minnesota State University",
-      "role": "Software Engineer Intern (Project)",
+      "role": "Software Engineer Intern",
       "period": "Jan 2025 – May 2025",
       "location": "Mankato, MN",
       "bullets": [
-        "Developed a full-stack web application to digitalize the paper-based student government voting and attorney scheduling systems.",
-        "Built dynamic calendar views and appointment interfaces using FullCalendar and JSON-based data rendering.",
-        "Implemented session-based role access and modular routing for seamless navigation.",
-        "Utilized SQLite for lightweight storage of availability and appointment data."
+        "Implemented a full-stack web app for the Student Government to manage voting and legal appointment scheduling, serving 80+ active users.",
+        "Integrated a real-time calendar system using FullCalendar and Pusher to sync availability and appointment updates.",
+        "Built a role-based access for 5 distinct user types: students, senate members, senate speaker, attorney, and super admin with tailored permissions and interfaces."
       ],
       "links": {}
     },
     {
       "company": "Minnesota State University - Mankato",
-      "role": "Data Science Engineer",
+      "role": "Data Science Engineer (Undergraduate Research Project)",
       "period": "Aug 2024 – Dec 2024",
       "location": "Mankato, MN",
       "bullets": [
         "Designed an ETL pipeline to create a facial image dataset for Butterfly Malar Rash (BMR) detection.",
-        "Developed CNN models using transfer learning for BMR detection.",
-        "Co-authored and published a peer-reviewed research paper on early detection of Systemic Lupus Erythematosus (SLE)."
+        "Developed CNN models using transfer learning for BMR detection, achieving 91% accuracy.",
+        "Co-authored a peer-reviewed research paper on early detection of Systemic Lupus Erythematosus, published by IEEE."
       ],
       "links": {}
     },
@@ -41,50 +40,41 @@
       "period": "Aug 2024 – Present",
       "location": "Mankato, MN",
       "bullets": [
-        "Providing technical support, addressing software/hardware issues on Mac and Windows platforms.",
-        "Performing re-imaging, OS installations, and network troubleshooting for end-users.",
-        "Collaborating with IT teams to enhance support processes and reduce downtime."
+        "Provided end-to-end technical support and troubleshooting for hardware and software issues, achieving a 98% customer satisfaction rate and reducing support ticket response time by 30%.",
+        "Maintained system reliability with 99.7% uptime, ensuring an uninterrupted and seamless user experience."
       ],
       "links": {}
     }
   ],
   "projects": [
     {
-      "name": "NutriFitBot – AI Nutrition Chatbot",
-      "summary": "Developed a chatbot that delivers personalized meal plans, fitness tips, and answers to health-related questions using Google Gemini API.",
-      "period": "Jan 2025 – Mar 2025",
-      "tech": ["React", "Flask", "Google Gemini API", "REST", "CSS"],
+      "name": "SAFEHR – Simulation EHR",
+      "summary": "Built a web app used by MNSU Nursing department to help nursing students explore patient data and practice clinical decision-making.",
+      "period": "Aug 2025 – Present",
+      "tech": ["Next.js", "React"],
       "bullets": [
-        "Integrated Flask backend with a React frontend for real-time chat and structured response generation.",
-        "Improved UI/UX with chat bubbles, loading states, timestamps, and responsive design."
+        "Created an interactive genogram and ecomap editor with drag-and-drop, relationship lines, notes, and PNG/JSON export, used in 10+ case scenarios."
+      ],
+      "links": {}
+    },
+    {
+      "name": "NutriFitBot – AI Nutrition Chatbot",
+      "summary": "Built an AI chatbot that provides meal guidance and macro breakdowns for quick, reliable nutrition answers.",
+      "period": "Jan 2025 – Mar 2025",
+      "tech": ["React", "Flask", "Google Gemini"],
+      "bullets": [
+        "Added Gemini-powered reasoning with streaming replies and a responsive chat UI.",
+        "Improved clarity and speed of responses, reducing user effort compared to searching multiple sites."
       ],
       "links": {}
     },
     {
       "name": "E-Commerce Marketplace",
-      "summary": "Developed a full-stack online marketplace with React TypeScript frontend and a Node.js / Express backend.",
-      "period": "Mar 2025 – Present",
-      "tech": ["React", "TypeScript", "TailwindCSS", "Node.js", "Express"],
+      "summary": "Built a full-stack marketplace that enables product browsing, cart management, and checkout.",
+      "period": "Mar 2025 – July 2025",
+      "tech": ["React", "Node.js", "Express"],
       "bullets": [
-        "Built product CRUD (list, detail, add-to-cart, delete) with Tailwind CSS styling and React Context for state."
-      ],
-      "links": {}
-    },
-    {
-      "name": "Expense Tracker",
-      "summary": "Python app with Tkinter for managing expenses (add, edit, delete, search, totals, CSV export).",
-      "period": "Jul 2024",
-      "tech": ["Python", "Tkinter", "Matplotlib"],
-      "bullets": ["Data visualized using Matplotlib (bar and pie charts)."],
-      "links": {}
-    },
-    {
-      "name": "Weather App",
-      "summary": "Responsive web app leveraging OpenWeatherMap API for real-time weather data.",
-      "period": "Feb 2023",
-      "tech": ["HTML", "CSS", "JavaScript", "OpenWeatherMap API"],
-      "bullets": [
-        "Features dynamic search by city/location, Celsius/Fahrenheit support, current conditions, 3-day forecasts, and local time."
+        "Delivered a typed React frontend with a clean REST API to keep features reliable and easy to extend."
       ],
       "links": {}
     }
@@ -93,25 +83,32 @@
     "groups": [
       {
         "title": "Languages",
-        "items": ["Python", "Java", "C", "SQL", "JavaScript", "HTML/CSS", "TypeScript"]
+        "items": ["Python", "Java", "C", "SQL", "JavaScript", "HTML/CSS"]
       },
       {
         "title": "Frameworks & Libraries",
-        "items": ["React", "Next.js", "Flask", "TensorFlow", "pandas", "Matplotlib", "OpenCV"]
+        "items": ["Django", "Next.js", "React"]
       },
       {
         "title": "Tools & Technologies",
-        "items": ["Git", "VS Code", "PyCharm", "SQLite", "Node.js", "Express", "REST APIs"]
-      },
-      {
-        "title": "Specializations",
-        "items": ["Full-Stack Development", "Machine Learning", "Data Science", "Computer Vision", "ETL Pipelines"]
+        "items": [
+          "Git",
+          "Next.js",
+          "TensorFlow",
+          "VS Code",
+          "MongoDB",
+          "Docker",
+          "Matplotlib",
+          "OpenCV",
+          "Flask",
+          "React"
+        ]
       }
     ]
   },
   "contact": {
     "email": "nebiyu.haile@mnsu.edu",
-    "phone": "(507)-469-4078",
+    "phone": "(507) 469-4078",
     "socials": {
       "linkedin": "https://linkedin.com/in/nebiyuhaile",
       "github": "https://github.com/NebiyuHaile"
@@ -123,13 +120,13 @@
     "period": "Dec 2026",
     "location": "Mankato, MN",
     "coursework": [
-      "Intro to Programming",
-      "Data Structures and Algorithms",
-      "Object-Oriented Programming",
-      "Computer Architecture",
-      "Operating Systems",
+      "Parallel Computing",
       "Software Engineering",
-      "Parallel Computing"
+      "Operating Systems",
+      "Computer Architecture",
+      "Intelligent Systems",
+      "Data Structures",
+      "Algorithms"
     ]
   }
 }
