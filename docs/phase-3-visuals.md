@@ -18,7 +18,7 @@ Glass planets use `MeshPhysicalMaterial` with transmission 0.94, roughness 0.075
 
 ## Post-processing
 
-`Selection` contains the scene and composer; only the sun subtree is wrapped in `Select`. The selected renderables are the core and corona, leaving glass planets, orbit guides, and stars out of Bloom. Relevant light refs are supplied to `SelectiveBloom`. The composer uses selective Bloom, tone mapping, and SMAA, with multisampling and renderer MSAA disabled to avoid redundant antialiasing.
+The sun publishes its core and corona meshes as an explicit selection for `SelectiveBloom`, leaving glass planets, orbit guides, and stars out of Bloom. Stable light objects are supplied directly. This works with the locked postprocessing version and React 19 types. The composer uses selective Bloom, tone mapping, and SMAA, with multisampling and renderer MSAA disabled to avoid redundant antialiasing.
 
 References: [selective Bloom](https://react-postprocessing.docs.pmnd.rs/effects/selective-bloom), [SMAA](https://react-postprocessing.docs.pmnd.rs/effects/smaa).
 

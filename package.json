@@ -86,6 +86,7 @@
     "zustand": "latest"
   },
   "devDependencies": {
+    "@types/three": "0.180.0",
     "@tailwindcss/postcss": "^4.1.9",
     "@types/node": "^22",
     "@types/react": "^19",

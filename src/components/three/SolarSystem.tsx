@@ -3,7 +3,7 @@
 import { useMemo, useRef, type RefObject } from "react"
 import { useFrame } from "@react-three/fiber"
 import { Html, Line } from "@react-three/drei"
-import { Group, Mesh, Vector3 } from "three"
+import { Group, Mesh, Object3D, Vector3 } from "three"
 import { usePortfolioStore } from "@/src/store/portfolio"
 import { SECTIONS } from "@/src/content/sections"
 import { ORBITS, orbitPosition, damp, type OrbitConfig } from "@/src/scene/mechanics"
@@ -41,7 +41,7 @@ function OrbitPath({ config }: { config: OrbitConfig }) {
   return <Line name={`orbit-${config.id}`} points={points} color="#6b92ad" transparent opacity={.22} lineWidth={1} />
 }
 
-export function SolarSystem({ labels }: { labels: RefObject<HTMLDivElement | null> }) {
+export function SolarSystem({ labels, onBloomSelection }: { labels: RefObject<HTMLDivElement | null>; onBloomSelection: (objects: Object3D[]) => void }) {
   const ref = useRef<Group>(null)
   const reducedMotion = usePortfolioStore((state) => state.reducedMotion)
   const activeNode = usePortfolioStore((state) => state.activeNode)
@@ -52,7 +52,7 @@ export function SolarSystem({ labels }: { labels: RefObject<HTMLDivElement | nul
     ref.current.rotation.y = damp(ref.current.rotation.y, reducedMotion ? 0 : pointer.x * .1, delta)
   }, -2)
   return <group ref={ref} name="solar-system">
-    <Sun labels={labels} />
+    <Sun labels={labels} onBloomSelection={onBloomSelection} />
     {ORBITS.map((config) => <OrbitPath key={`path-${config.id}`} config={config} />)}
     {ORBITS.map((config) => <Planet key={config.id} config={config} labels={labels} />)}
   </group>

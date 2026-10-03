@@ -1,9 +1,9 @@
 "use client"
 
-import { Suspense, useMemo, useRef } from "react"
+import { Suspense, useMemo, useRef, useState } from "react"
 import { Canvas } from "@react-three/fiber"
 import { Environment, Lightformer, Stars } from "@react-three/drei"
-import { EffectComposer, Selection, SelectiveBloom, SMAA, ToneMapping } from "@react-three/postprocessing"
+import { EffectComposer, SelectiveBloom, SMAA, ToneMapping } from "@react-three/postprocessing"
 import { AmbientLight, Object3D, PointLight } from "three"
 import { OVERVIEW } from "@/src/scene/navigation"
 import { CameraRig } from "./CameraRig"
@@ -14,9 +14,14 @@ import type { NodeId } from "@/src/content/sections"
 function OrbitalScene() {
   const labels = useRef<HTMLDivElement>(null)
   const registry = useMemo(() => new Map<NodeId, Object3D>(), [])
-  const ambient = useRef<AmbientLight>(null)
-  const sunlight = useRef<PointLight>(null)
-  const lights = useMemo(() => [ambient, sunlight], [])
+  const ambient = useMemo(() => new AmbientLight(0xffffff, .35), [])
+  const sunlight = useMemo(() => {
+    const light = new PointLight("#ffd2a0", 12)
+    light.position.set(0, 1, 0)
+    return light
+  }, [])
+  const [bloomSelection, setBloomSelection] = useState<Object3D[]>([])
+  const lights = useMemo(() => [ambient, sunlight], [ambient, sunlight])
   return <div className="absolute inset-0">
     <div ref={labels} className="pointer-events-none absolute inset-0 z-10" />
     <Canvas
@@ -28,8 +33,8 @@ function OrbitalScene() {
     >
       <SceneRegistryContext.Provider value={registry}>
         <color attach="background" args={["#080f1d"]} />
-        <ambientLight ref={ambient} intensity={.35} />
-        <pointLight ref={sunlight} position={[0, 1, 0]} color="#ffd2a0" intensity={12} />
+        <primitive object={ambient} />
+        <primitive object={sunlight} />
         <Suspense fallback={null}>
           <Environment resolution={256} frames={1} background={false}>
             <color attach="background" args={["#101929"]} />
@@ -38,15 +43,15 @@ function OrbitalScene() {
             <Lightformer form="rect" intensity={3} color="#fff0c2" position={[4, 2, 1]} scale={[2, 6, 1]} rotation={[0, -Math.PI / 2, 0]} />
           </Environment>
           <Stars radius={70} depth={20} count={1600} factor={2} fade speed={0} />
-          <Selection>
-            <SolarSystem labels={labels} />
+          <>
+            <SolarSystem labels={labels} onBloomSelection={setBloomSelection} />
             <CameraRig />
             <EffectComposer multisampling={0} enableNormalPass={false}>
-              <SelectiveBloom lights={lights} intensity={.65} luminanceThreshold={1} luminanceSmoothing={.15} mipmapBlur radius={.55} levels={5} ignoreBackground />
+              <SelectiveBloom selection={bloomSelection} lights={lights} intensity={.65} luminanceThreshold={1} luminanceSmoothing={.15} mipmapBlur radius={.55} levels={5} ignoreBackground />
               <ToneMapping />
               <SMAA />
             </EffectComposer>
-          </Selection>
+          </>
         </Suspense>
       </SceneRegistryContext.Provider>
     </Canvas>
