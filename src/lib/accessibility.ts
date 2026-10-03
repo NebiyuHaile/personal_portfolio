@@ -92,6 +92,18 @@ export function useKeyboardNavigation(callbacks: {
         return
       }
 
+      if (event.target instanceof Element && event.target.closest("button, a, select, [role='dialog']")) {
+        if (event.key === "Escape") callbacks.onEscape?.()
+        return
+      }
+      const handler = {
+        ArrowUp: callbacks.onArrowUp, ArrowDown: callbacks.onArrowDown,
+        ArrowLeft: callbacks.onArrowLeft, ArrowRight: callbacks.onArrowRight,
+        Enter: callbacks.onEnter, Escape: callbacks.onEscape,
+        " ": callbacks.onSpace, Home: callbacks.onHome, End: callbacks.onEnd,
+      }[event.key]
+      if (!handler) return
+
       switch (event.key) {
         case "ArrowUp":
           event.preventDefault()

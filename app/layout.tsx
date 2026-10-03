@@ -64,7 +64,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className="dark h-full">
+    <html lang="en" className="dark">
       <head>
         <script
           type="application/ld+json"
@@ -96,9 +96,9 @@ export default function RootLayout({
           }}
         />
       </head>
-      {/* Full-viewport body to let the Canvas fill the screen */}
+      {/* Orbital view owns its viewport; Scroll view uses document flow. */}
       <body
-        className={`min-h-dvh h-dvh w-screen overflow-hidden bg-[#0b1220] text-white antialiased ${GeistSans.variable} ${GeistMono.variable}`}
+        className={`min-h-dvh w-full bg-[#0b1220] text-white antialiased ${GeistSans.variable} ${GeistMono.variable}`}
       >
         <Suspense fallback={null}>{children}</Suspense>
         <Analytics />

@@ -10,7 +10,7 @@ export interface NodeObject extends THREE.Group {
 }
 
 export class SolarObjects {
-  public sun: THREE.Group
+  public sun = new THREE.Group()
   public nodes: NodeObject[] = []
   private scene: THREE.Scene
   private nodeLabels: THREE.Sprite[] = [] // Added node labels
@@ -28,8 +28,6 @@ export class SolarObjects {
     const sunGeometry = new THREE.SphereGeometry(0.3, 16, 16)
     const sunMaterial = new THREE.MeshBasicMaterial({
       color: 0xffd700,
-      emissive: 0xffd700,
-      emissiveIntensity: 0.3,
     })
     const sunMesh = new THREE.Mesh(sunGeometry, sunMaterial)
     this.sun.add(sunMesh)

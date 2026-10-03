@@ -1,8 +1,8 @@
 import { gsap } from "gsap"
 
 // Register GSAP eases
-gsap.registerEase("customExpo", "power3.out")
-gsap.registerEase("customBack", "back.out(1.7)")
+gsap.registerEase("customExpo", gsap.parseEase("power3.out"))
+gsap.registerEase("customBack", gsap.parseEase("back.out(1.7)"))
 
 export const motionConfig = {
   camera: {

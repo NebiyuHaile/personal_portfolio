@@ -1,7 +1,7 @@
 {
   "summary": {
     "headline": "Software Engineer & Data Science Researcher",
-    "about": "Computer Science student at Minnesota State University with experience in full-stack development, machine learning, and research. Passionate about creating innovative solutions that bridge technology and real-world applications.",
+    "about": "Computer Science student at Minnesota State University working across backend systems, full-stack applications, and machine learning research. I build reliable tools for real users, from inference routing and clinical simulation to codebase exploration.",
     "links": {
       "email": "nebiyu.haile@mnsu.edu",
       "phone": "(507) 469-4078",
@@ -13,95 +13,255 @@
     {
       "company": "Student Government @ Minnesota State University",
       "role": "Software Engineer Intern",
-      "period": "Jan 2025 – May 2025",
+      "period": "January 2025 – May 2025",
       "location": "Mankato, MN",
       "bullets": [
-        "Implemented a full-stack web app for the Student Government to manage voting and legal appointment scheduling, serving 80+ active users.",
-        "Integrated a real-time calendar system using FullCalendar and Pusher to sync availability and appointment updates.",
-        "Built a role-based access for 5 distinct user types: students, senate members, senate speaker, attorney, and super admin with tailored permissions and interfaces."
+        "Shipped Senate-sync, a TypeScript/Next.js platform used by 500+ users across four internal tools; owned API design, database schema, and GitHub Actions deployment workflows supporting zero-downtime releases.",
+        "Implemented JWT authentication and RBAC for five user roles, added optimistic concurrency control to vote writes, and used Pusher WebSockets with an append-only vote ledger to keep updates real-time and auditable.",
+        "Built Jest integration tests for critical authentication and voting workflows, catching regressions before production releases."
       ],
       "links": {}
     },
     {
-      "company": "Minnesota State University - Mankato",
-      "role": "Data Science Engineer (Undergraduate Research Project)",
-      "period": "Aug 2024 – Dec 2024",
+      "company": "Systemic Lupus Erythematosus Detection",
+      "role": "Undergraduate Research Engineer",
+      "period": "August 2024 – December 2024",
       "location": "Mankato, MN",
       "bullets": [
-        "Designed an ETL pipeline to create a facial image dataset for Butterfly Malar Rash (BMR) detection.",
-        "Developed CNN models using transfer learning for BMR detection, achieving 91% accuracy.",
-        "Co-authored a peer-reviewed research paper on early detection of Systemic Lupus Erythematosus, published by IEEE."
+        "Built a Python ETL pipeline to collect, clean, and label a clinical image dataset for SLE detection; trained TensorFlow transfer-learning CNNs and reached 91% accuracy after identifying class imbalance through confusion-matrix analysis and applying weighted loss.",
+        "Published the resulting research in a peer-reviewed IEEE paper."
       ],
       "links": {}
     },
     {
-      "company": "Minnesota State University - Mankato",
-      "role": "IT Student Consultant",
-      "period": "Aug 2024 – Present",
+      "company": "Minnesota State University",
+      "role": "Senior IT Student Consultant",
+      "period": "August 2024 – Present",
       "location": "Mankato, MN",
       "bullets": [
-        "Provided end-to-end technical support and troubleshooting for hardware and software issues, achieving a 98% customer satisfaction rate and reducing support ticket response time by 30%.",
-        "Maintained system reliability with 99.7% uptime, ensuring an uninterrupted and seamless user experience."
+        "Maintained 99.7% service uptime and reduced incident resolution time by 30% through log-driven debugging and upstream configuration fixes that eliminated recurring alerts; maintained a 98% user satisfaction rate."
       ],
       "links": {}
     }
   ],
   "projects": [
     {
-      "name": "SAFEHR – Simulation EHR",
-      "summary": "Built a web app used by MNSU Nursing department to help nursing students explore patient data and practice clinical decision-making.",
-      "period": "Aug 2025 – Present",
-      "tech": ["Next.js", "React"],
-      "bullets": [
-        "Created an interactive genogram and ecomap editor with drag-and-drop, relationship lines, notes, and PNG/JSON export, used in 10+ case scenarios."
+      "name": "RouteAlpha: Inference Routing Gateway",
+      "summary": "An inference gateway that routes requests by task type and token budget, with ordered provider fallback and circuit breakers.",
+      "period": "February 2026 – Present",
+      "tech": [
+        "Python",
+        "FastAPI",
+        "PostgreSQL",
+        "OpenRouter"
       ],
-      "links": {}
+      "links": {},
+      "caseStudy": {
+        "problem": "Route inference requests according to task requirements and budget while handling provider failures.",
+        "role": "Designed the gateway and its routing, validation, security, and telemetry behavior.",
+        "backend": {
+          "summary": "A FastAPI/PostgreSQL gateway coordinates inference routing and provider resilience.",
+          "tech": [
+            "FastAPI",
+            "PostgreSQL",
+            "OpenRouter",
+            "Pydantic"
+          ],
+          "details": [
+            "Routes requests by task type and token budget.",
+            "Uses ordered provider fallback and circuit breakers to handle provider failures.",
+            "Adds Pydantic output validation, rate limiting, prompt-injection screening, and TOTP-based two-factor authentication."
+          ]
+        },
+        "flow": [
+          "Screen and rate-limit incoming requests.",
+          "Select a route by task type and token budget.",
+          "Call a provider with ordered fallback and circuit-breaker handling.",
+          "Validate the output with Pydantic; move telemetry to FastAPI BackgroundTasks."
+        ],
+        "decisions": [
+          {
+            "title": "Telemetry off the request path",
+            "decision": "Moved telemetry to FastAPI BackgroundTasks to keep logging off the request path."
+          }
+        ],
+        "outcomes": []
+      }
     },
     {
-      "name": "NutriFitBot – AI Nutrition Chatbot",
-      "summary": "Built an AI chatbot that provides meal guidance and macro breakdowns for quick, reliable nutrition answers.",
-      "period": "Jan 2025 – Mar 2025",
-      "tech": ["React", "Flask", "Google Gemini"],
-      "bullets": [
-        "Added Gemini-powered reasoning with streaming replies and a responsive chat UI.",
-        "Improved clarity and speed of responses, reducing user effort compared to searching multiple sites."
+      "name": "CodeGuide: Codebase Q&A and Patch Tool",
+      "summary": "A developer tool for natural-language questions over indexed codebases and reviewable code patches.",
+      "period": "July 2026",
+      "tech": [
+        "TypeScript",
+        "Python",
+        "OpenAI Codex"
       ],
-      "links": {}
+      "links": {},
+      "caseStudy": {
+        "problem": "Help developers understand indexed codebases and review generated changes before applying them.",
+        "frontend": {
+          "summary": "A TypeScript developer tool presents codebase answers and reviewable patches.",
+          "tech": [
+            "TypeScript"
+          ],
+          "details": [
+            "Answers natural-language questions over indexed codebases.",
+            "Requires human approval before applying generated changes."
+          ]
+        },
+        "backend": {
+          "summary": "Model requests are routed through RouteAlpha’s inference API.",
+          "tech": [
+            "Python",
+            "OpenAI Codex",
+            "RouteAlpha"
+          ],
+          "details": [
+            "Connects the developer workflow to the inference gateway."
+          ]
+        },
+        "flow": [
+          "Ask a natural-language question over an indexed codebase.",
+          "Route the model request through RouteAlpha’s inference API.",
+          "Generate an answer or a reviewable patch.",
+          "Require human approval before applying changes."
+        ],
+        "decisions": [
+          {
+            "title": "Review before applying changes",
+            "decision": "Generated code patches require human approval before they are applied."
+          }
+        ],
+        "outcomes": []
+      }
     },
     {
-      "name": "E-Commerce Marketplace",
-      "summary": "Built a full-stack marketplace that enables product browsing, cart management, and checkout.",
-      "period": "Mar 2025 – July 2025",
-      "tech": ["React", "Node.js", "Express"],
-      "bullets": [
-        "Delivered a typed React frontend with a clean REST API to keep features reliable and easy to extend."
+      "name": "SAFEHR: Simulation EHR",
+      "summary": "A clinical simulation platform for MNSU Nursing, with graph-based patient data and role-based access across clinical scenarios.",
+      "period": "August 2025 – December 2025",
+      "tech": [
+        "Next.js",
+        "TypeScript",
+        "React"
       ],
-      "links": {}
+      "links": {},
+      "caseStudy": {
+        "frontend": {
+          "summary": "A Next.js/React application supports nursing students working through clinical simulation scenarios.",
+          "tech": [
+            "Next.js",
+            "TypeScript",
+            "React"
+          ],
+          "details": []
+        },
+        "backend": {
+          "summary": "Backend APIs and graph-structured patient data models enforce access by role.",
+          "tech": [
+            "Graph data models",
+            "Role-based access",
+            "Pytest"
+          ],
+          "details": [
+            "Represents patient data as a graph structure.",
+            "Enforces role-based access across more than 10 scenarios.",
+            "Uses a Pytest regression suite to verify a mid-project schema refactor."
+          ]
+        },
+        "decisions": [
+          {
+            "title": "Schema migration with regression coverage",
+            "decision": "Built a Pytest regression suite around the application schema refactor."
+          }
+        ],
+        "outcomes": [
+          "Supported role-based clinical simulation across 10+ scenarios.",
+          "Shipped the schema migration with zero regressions."
+        ]
+      }
+    },
+    {
+      "name": "EMDC Tabulation System",
+      "summary": "Corrected scoring and tabulation defects across a Django backend and PostgreSQL data layer.",
+      "period": "January 2026 – May 2026",
+      "tech": [
+        "Django",
+        "PostgreSQL",
+        "Python"
+      ],
+      "links": {},
+      "caseStudy": {
+        "backend": {
+          "summary": "Scoring and tabulation run through Django and PostgreSQL.",
+          "tech": [
+            "Django",
+            "PostgreSQL",
+            "Python"
+          ],
+          "details": [
+            "Traced critical defects in judge-to-cluster mapping and score tabulation.",
+            "Validated the corrected system end to end across live rounds."
+          ]
+        },
+        "outcomes": [
+          "Confirmed 100% leaderboard accuracy across live rounds."
+        ]
+      }
     }
   ],
   "skills": {
     "groups": [
       {
         "title": "Languages",
-        "items": ["Python", "Java", "C", "SQL", "JavaScript", "HTML/CSS"]
+        "items": [
+          "Python",
+          "TypeScript/JavaScript",
+          "C/C++",
+          "Java",
+          "Go",
+          "SQL"
+        ]
       },
       {
-        "title": "Frameworks & Libraries",
-        "items": ["Django", "Next.js", "React"]
+        "title": "Frameworks",
+        "items": [
+          "FastAPI",
+          "Django",
+          "Next.js",
+          "Node.js",
+          "React",
+          "Pydantic"
+        ]
       },
       {
-        "title": "Tools & Technologies",
+        "title": "Systems & Data",
+        "items": [
+          "PostgreSQL",
+          "MongoDB",
+          "REST APIs",
+          "WebSockets",
+          "Docker",
+          "AWS"
+        ]
+      },
+      {
+        "title": "Testing & Tooling",
         "items": [
           "Git",
-          "Next.js",
+          "GitHub Actions",
+          "CI/CD",
+          "Pytest",
+          "Jest"
+        ]
+      },
+      {
+        "title": "AI/ML",
+        "items": [
           "TensorFlow",
-          "VS Code",
-          "MongoDB",
-          "Docker",
-          "Matplotlib",
-          "OpenCV",
-          "Flask",
-          "React"
+          "OpenAI",
+          "Anthropic",
+          "Gemini APIs"
         ]
       }
     ]
@@ -116,17 +276,32 @@
   },
   "education": {
     "institution": "Minnesota State University",
-    "degree": "Bachelor of Science in Computer Science, Minor in Mathematics",
-    "period": "Dec 2026",
+    "degree": "B.S. Computer Science, Minor in Mathematics",
+    "period": "Expected December 2026",
     "location": "Mankato, MN",
     "coursework": [
+      "Data Structures & Algorithms",
+      "Distributed Systems",
       "Parallel Computing",
-      "Software Engineering",
       "Operating Systems",
       "Computer Architecture",
-      "Intelligent Systems",
-      "Data Structures",
-      "Algorithms"
+      "Intelligent Systems"
     ]
-  }
+  },
+  "activities": [
+    {
+      "name": "CodePath · AI201: Applications of AI Engineering",
+      "period": "June 2026 – August 2026"
+    },
+    {
+      "name": "CodePath · SWE Fellowship, Technical Interview Prep",
+      "period": "June 2024 – August 2024"
+    },
+    {
+      "name": "NSBE · Active Member"
+    },
+    {
+      "name": "ColorStack · Active Member"
+    }
+  ]
 }

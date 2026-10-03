@@ -6,7 +6,11 @@
     "build": "next build",
     "dev": "next dev",
     "lint": "next lint",
-    "start": "next start"
+    "start": "next start",
+    "test:navigation": "node --test tests/navigation.test.cjs",
+    "typecheck": "tsc --noEmit",
+    "test:content": "node --test tests/content.test.cjs",
+    "test:mechanics": "node --test tests/mechanics.test.cjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
@@ -55,6 +59,7 @@
     "expo-asset": "latest",
     "expo-file-system": "latest",
     "expo-gl": "latest",
+    "framer-motion": "14.0.0",
     "geist": "latest",
     "gsap": "latest",
     "immer": "latest",

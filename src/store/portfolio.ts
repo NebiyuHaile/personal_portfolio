@@ -3,6 +3,7 @@
 import { create } from "zustand"
 import { persist } from "zustand/middleware"
 import type { Vector3 } from "three"
+import { SECTIONS, type NodeId, type ViewMode } from "@/src/content/sections"
 import type { NormalizedData } from "@/src/content/loader"
 
 interface PortfolioState {
@@ -11,6 +12,14 @@ interface PortfolioState {
   setResumeData: (data: NormalizedData) => void
   dataSource: "sanity" | "contentful" | "json" | "demo" | null
   setDataSource: (source: "sanity" | "contentful" | "json" | "demo") => void
+
+  activeNode: NodeId | null
+  viewMode: ViewMode
+  isAnimating: boolean
+  transitionId: number
+  selectNode: (node: NodeId | null) => void
+  setViewMode: (mode: ViewMode) => void
+  finishTransition: (id: number) => void
 
   // Navigation
   focusedIndex: number
@@ -52,21 +61,41 @@ export const usePortfolioStore = create<PortfolioState>()(
       dataSource: null,
       setDataSource: (source) => set({ dataSource: source }),
 
+      activeNode: null,
+      viewMode: "orbital",
+      isAnimating: false,
+      transitionId: 0,
+      selectNode: (node) => set((state) => ({
+        activeNode: node,
+        focusedIndex: node === null ? -1 : SECTIONS.findIndex((section) => section.id === node),
+        isPanelOpen: node !== null,
+        isAnimating: state.viewMode === "orbital" && !state.reducedMotion,
+        transitionId: state.transitionId + 1,
+      })),
+      setViewMode: (mode) => set((state) => ({
+        viewMode: mode,
+        useListView: mode === "scroll",
+        isAnimating: mode === "orbital" && !state.reducedMotion,
+        transitionId: state.transitionId + 1,
+      })),
+      finishTransition: (id) => set((state) =>
+        id === state.transitionId ? { isAnimating: false } : {}),
+
       // Navigation
       focusedIndex: -1,
-      setFocusedIndex: (index) => set({ focusedIndex: index }),
+      setFocusedIndex: (index) => get().focusNode(index),
       hoveredIndex: null,
       setHoveredIndex: (index) => set({ hoveredIndex: index }),
 
       // UI State
       isPanelOpen: false,
-      setIsPanelOpen: (open) => set({ isPanelOpen: open }),
+      setIsPanelOpen: (open) => { if (!open) get().closePanel(); else if (get().activeNode) set({ isPanelOpen: true }) },
       useListView: false,
-      setUseListView: (use) => set({ useListView: use }),
+      setUseListView: (use) => get().setViewMode(use ? "scroll" : "orbital"),
 
       // Accessibility
       reducedMotion: false,
-      setReducedMotion: (reduced) => set({ reducedMotion: reduced }),
+      setReducedMotion: (reduced) => set((state) => ({ reducedMotion: reduced, isAnimating: reduced ? false : state.isAnimating })),
 
       // 3D Scene
       nodePositions: [],
@@ -79,7 +108,7 @@ export const usePortfolioStore = create<PortfolioState>()(
       // Actions
       navigateToNode: (direction) => {
         const { focusedIndex } = get()
-        const nodeCount = 5
+        const nodeCount = SECTIONS.length
         let newIndex: number
 
         if (focusedIndex === -1) {
@@ -92,18 +121,11 @@ export const usePortfolioStore = create<PortfolioState>()(
       },
 
       focusNode: (index) => {
-        set({
-          focusedIndex: index,
-          isPanelOpen: true,
-        })
+        if (index === -1) get().selectNode(null)
+        else if (SECTIONS[index]) get().selectNode(SECTIONS[index].id)
       },
 
-      closePanel: () => {
-        set({
-          focusedIndex: -1,
-          isPanelOpen: false,
-        })
-      },
+      closePanel: () => get().selectNode(null),
 
       refreshData: async () => {
         const { loadResumeData } = await import("@/src/content/loader")
@@ -113,9 +135,12 @@ export const usePortfolioStore = create<PortfolioState>()(
     }),
     {
       name: "orbital-portfolio-storage",
+      version: 1,
+      skipHydration: true,
+      migrate: () => ({ viewMode: "orbital", useListView: false }),
       partialize: (state) => ({
-        useListView: state.useListView,
-        reducedMotion: state.reducedMotion,
+        viewMode: state.viewMode,
+        useListView: state.viewMode === "scroll",
         performanceMode: state.performanceMode,
       }),
     },

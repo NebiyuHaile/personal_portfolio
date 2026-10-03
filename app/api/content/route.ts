@@ -1,15 +1,11 @@
 import { NextResponse } from "next/server"
 import { createClient } from "contentful"
-import type { NormalizedData } from "@/src/content/loader"
-
-const contentfulClient = createClient({
-  space: process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID || "",
-  accessToken: process.env.CONTENTFUL_ACCESS_TOKEN || "", // Using server-only token
-  environment: process.env.NEXT_PUBLIC_CONTENTFUL_ENVIRONMENT || "master",
-})
+import { resumeSchema, type NormalizedData } from "@/src/content/schema"
 
 function normalizeContentfulData(data: any): NormalizedData {
-  return {
+  return resumeSchema.parse({
+    education: data.education?.fields ?? data.education,
+    activities: data.activities,
     summary: {
       headline: data.summary?.fields?.headline || "Portfolio",
       about: data.summary?.fields?.about || "",
@@ -26,13 +22,15 @@ function normalizeContentfulData(data: any): NormalizedData {
       })) || [],
     projects:
       data.projects?.map((project: any) => ({
+        caseStudy: project.fields?.caseStudy,
         name: project.fields?.name || "",
         summary: project.fields?.summary || "",
         period: project.fields?.period || "",
         tech: project.fields?.tech || [],
         bullets: project.fields?.bullets || [],
         links: project.fields?.links || {},
-        image: project.fields?.image?.fields?.file?.url || undefined,
+        image: project.fields?.image?.fields?.file?.url
+          ? new URL(project.fields.image.fields.file.url, "https://images.ctfassets.net").href : undefined,
       })) || [],
     skills: {
       groups:
@@ -46,7 +44,7 @@ function normalizeContentfulData(data: any): NormalizedData {
       phone: data.contact?.fields?.phone || "",
       socials: data.contact?.fields?.socials || {},
     },
-  }
+  })
 }
 
 export async function GET() {
@@ -56,6 +54,11 @@ export async function GET() {
       return NextResponse.json({ error: "Contentful not configured" }, { status: 404 })
     }
 
+    const contentfulClient = createClient({
+      space: process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID,
+      accessToken: process.env.CONTENTFUL_ACCESS_TOKEN,
+      environment: process.env.NEXT_PUBLIC_CONTENTFUL_ENVIRONMENT || "master",
+    })
     const entries = await contentfulClient.getEntries({
       content_type: "portfolio",
       limit: 1,

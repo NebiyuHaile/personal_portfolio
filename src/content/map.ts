@@ -1,46 +1,12 @@
-// Content mapping for panels
-import type { NormalizedData } from "./loader"
+import type { NormalizedData } from "./schema"
+import { SECTIONS, type NodeId } from "./sections"
 
 export interface PanelData {
+  id: NodeId
   title: string
-  content: any
+  data: NormalizedData
 }
 
-export function mapContentToPanels(data: NormalizedData): Record<string, PanelData> {
-  return {
-    introduction: {
-      title: "Introduction",
-      content: {
-        headline: data.summary.headline,
-        about: data.summary.about,
-        links: data.summary.links,
-      },
-    },
-    experience: {
-      title: "Experience",
-      content: {
-        items: data.experience,
-      },
-    },
-    projects: {
-      title: "Projects",
-      content: {
-        items: data.projects,
-      },
-    },
-    skills: {
-      title: "Skills",
-      content: {
-        groups: data.skills.groups,
-      },
-    },
-    contact: {
-      title: "Contact",
-      content: {
-        email: data.contact.email,
-        phone: data.contact.phone,
-        socials: data.contact.socials,
-      },
-    },
-  }
+export function mapContentToPanels(data: NormalizedData): Record<NodeId, PanelData> {
+  return Object.fromEntries(SECTIONS.map(({ id, label }) => [id, { id, title: label, data }])) as Record<NodeId, PanelData>
 }

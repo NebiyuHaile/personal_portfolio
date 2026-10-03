@@ -2,7 +2,7 @@
 
 import { createClient } from "@sanity/client"
 import imageUrlBuilder from "@sanity/image-url"
-import type { NormalizedData } from "@/src/content/loader"
+import { resumeSchema, type NormalizedData } from "@/src/content/schema"
 
 const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID
 const client = projectId
@@ -59,7 +59,8 @@ export async function fetchFromSanity(): Promise<NormalizedData | null> {
           tech,
           bullets,
           links,
-          image
+          image,
+          caseStudy
         },
         skills {
           groups[] {
@@ -67,6 +68,8 @@ export async function fetchFromSanity(): Promise<NormalizedData | null> {
             items
           }
         },
+        education,
+        activities,
         contact {
           email,
           phone,
@@ -91,7 +94,9 @@ export async function fetchFromSanity(): Promise<NormalizedData | null> {
 }
 
 function normalizeSanityData(data: any): NormalizedData {
-  return {
+  return resumeSchema.parse({
+    education: data.education,
+    activities: data.activities,
     summary: {
       headline: data.summary?.headline || "Portfolio",
       about: data.summary?.about || "",
@@ -108,6 +113,7 @@ function normalizeSanityData(data: any): NormalizedData {
       })) || [],
     projects:
       data.projects?.map((project: any) => ({
+        caseStudy: project.caseStudy,
         name: project.name || "",
         summary: project.summary || "",
         period: project.period || "",
@@ -128,5 +134,5 @@ function normalizeSanityData(data: any): NormalizedData {
       phone: data.contact?.phone || "",
       socials: data.contact?.socials || {},
     },
-  }
+  })
 }

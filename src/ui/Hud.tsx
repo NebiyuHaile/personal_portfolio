@@ -1,54 +1,37 @@
-// HUD navigation component
 "use client"
 
-interface HudProps {
-  focusedIndex: number
-  hoveredIndex: number | null
-  onNodeClick: (index: number) => void
-}
+import { SECTIONS } from "@/src/content/sections"
+import { usePortfolioStore } from "@/src/store/portfolio"
 
-const sections = ["Introduction", "Experience", "Projects", "Skills", "Contact"]
+export function Hud() {
+  const activeNode = usePortfolioStore((state) => state.activeNode)
+  const viewMode = usePortfolioStore((state) => state.viewMode)
+  const selectNode = usePortfolioStore((state) => state.selectNode)
+  const setViewMode = usePortfolioStore((state) => state.setViewMode)
+  const isAnimating = usePortfolioStore((state) => state.isAnimating)
 
-export function Hud({ focusedIndex, hoveredIndex, onNodeClick }: HudProps) {
+  const navigate = (node: typeof activeNode) => {
+    selectNode(node)
+    if (viewMode === "scroll") {
+      const element = node ? document.getElementById(`${node}-heading`) : null
+      if (element) element.scrollIntoView({ block: "start", behavior: "auto" })
+      else window.scrollTo({ top: 0, behavior: "auto" })
+    }
+  }
+
   return (
-    <nav className="hud-nav" aria-label="Portfolio navigation">
-      <div className="flex flex-col gap-3">
-        {sections.map((section, index) => (
-          <button
-            key={section}
-            className={`w-3 h-3 rounded-full border-2 transition-all duration-200 ${
-              focusedIndex === index
-                ? "bg-white border-white shadow-lg shadow-white/50"
-                : hoveredIndex === index
-                  ? "bg-white/50 border-white scale-110"
-                  : "bg-transparent border-white/50 hover:border-white/80 hover:scale-105"
-            }`}
-            onClick={() => onNodeClick(index)}
-            aria-label={`${section} section`}
-            title={section}
-          />
-        ))}
-      </div>
-
-      {/* Section labels on hover */}
-      <div className="absolute right-6 top-0 pointer-events-none">
-        {sections.map((section, index) => (
-          <div
-            key={section}
-            className={`absolute transition-all duration-200 ${
-              hoveredIndex === index || focusedIndex === index ? "opacity-100 translate-x-0" : "opacity-0 translate-x-2"
-            }`}
-            style={{
-              top: `${index * 24}px`,
-              transform: "translateY(-50%)",
-            }}
-          >
-            <div className="bg-black/80 text-white text-sm px-3 py-1 rounded-lg border border-white/20 whitespace-nowrap">
-              {section}
-            </div>
-          </div>
-        ))}
-      </div>
+    <nav id="navigation" aria-label="Portfolio navigation" className="fixed inset-x-3 top-3 z-50 mx-auto flex max-w-4xl flex-wrap items-center justify-center gap-1 rounded-2xl border border-white/15 bg-slate-950/90 p-2 text-white shadow-xl backdrop-blur-md">
+      <button onClick={() => navigate(null)} className="rounded-lg px-3 py-2 text-sm hover:bg-white/10 focus-visible:outline focus-visible:outline-2">Overview</button>
+      {SECTIONS.map((section) => (
+        <button data-node={section.id} key={section.id} onClick={() => navigate(section.id)} aria-current={activeNode === section.id ? "location" : undefined}
+          className={`rounded-lg px-3 py-2 text-sm hover:bg-white/10 focus-visible:outline focus-visible:outline-2 ${activeNode === section.id ? "bg-white/15 text-sky-200" : "text-slate-300"}`}>
+          {section.label}
+        </button>
+      ))}
+      <button onClick={() => setViewMode(viewMode === "orbital" ? "scroll" : "orbital")} className="rounded-lg border border-white/20 px-3 py-2 text-sm hover:bg-white/10 focus-visible:outline focus-visible:outline-2">
+        {viewMode === "orbital" ? "Scroll View" : "Orbital View"}
+      </button>
+      <span role="status" className="sr-only">{isAnimating ? `Camera moving to ${activeNode ?? "overview"}` : `${activeNode ?? "Overview"} ready`}</span>
     </nav>
   )
 }

@@ -2,7 +2,6 @@
 
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
-import type { SceneProps } from "@/src/components/three/Scene";
 import { Panel } from "@/src/ui/Panels";
 import { Hud } from "@/src/ui/Hud";
 import { ListView } from "@/src/ui/ListView";
@@ -15,35 +14,32 @@ import { ErrorBoundary } from "@/src/components/ui/ErrorBoundary";
 import { LoadingSpinner } from "@/src/components/ui/LoadingSpinner";
 import { usePortfolioStore } from "@/src/store/portfolio";
 import { loadResumeData } from "@/src/content/loader";
-import { mapContentToPanels } from "@/src/content/map";
+import { useViewPreferences } from "@/src/hooks/useViewPreferences";
 import {
-  getReducedMotionPreference,
   announceToScreenReader,
   useKeyboardNavigation,
 } from "@/src/lib/accessibility";
 import { useGestures } from "@/src/hooks/useGestures";
 
-const Scene = dynamic<SceneProps>(() => import("@/src/components/three/Scene"), {
+const Scene = dynamic(() => import("@/src/components/three/Scene"), {
   ssr: false,
 });
 
 export default function OrbitalPortfolio() {
-  const noop = () => {};
   const [isLoading, setIsLoading] = useState(true);
+  const preferencesReady = useViewPreferences();
 
   const {
     resumeData,
     setResumeData,
     focusedIndex,
-    isPanelOpen,
     hoveredIndex,
     useListView,
     setUseListView,
-    reducedMotion,
-    setReducedMotion,
+    viewMode,
+    activeNode,
     focusNode,
     closePanel,
-    setHoveredIndex,
     navigateToNode,
   } = usePortfolioStore();
 
@@ -68,48 +64,25 @@ export default function OrbitalPortfolio() {
     };
   }, [useListView]);
 
-  /* Hard-block wheel/trackpad in Orbital view */
   useEffect(() => {
-    if (!useListView) {
-      const preventWheel = (e: WheelEvent) => e.preventDefault();
-      window.addEventListener("wheel", preventWheel, { passive: false });
-      return () => window.removeEventListener("wheel", preventWheel as any);
-    }
-  }, [useListView]);
-
-  useEffect(() => {
-    const prefersReducedMotion = getReducedMotionPreference();
-    const hasWebGLSupport = (() => {
-      try {
-        const c = document.createElement("canvas");
-        return !!(c.getContext("webgl") || c.getContext("experimental-webgl"));
-      } catch {
-        return false;
-      }
-    })();
-
-    setReducedMotion(prefersReducedMotion);
-    if (prefersReducedMotion || !hasWebGLSupport) setUseListView(true);
-
     const loadData = async () => {
       try {
         const data = await loadResumeData();
-        setResumeData(data);
-        setIsLoading(false);
+        if (!disposed) { settled = true; setResumeData(data); setIsLoading(false); }
       } catch {
-        const { getDemoData } = await import("@/src/content/loader");
-        setResumeData(getDemoData());
-        setIsLoading(false);
+        const { getBundledData } = await import("@/src/content/loader");
+        if (!disposed) { settled = true; setResumeData(getBundledData()); setIsLoading(false); }
       }
     };
+    let disposed = false;
+    let settled = false;
     loadData();
 
     const timeoutId = setTimeout(() => {
-      if (isLoading) {
+      if (!disposed && !settled) {
         import("@/src/content/loader")
-          .then(({ getDemoData }) => {
-            setResumeData(getDemoData());
-            setIsLoading(false);
+          .then(({ getBundledData }) => {
+            if (!disposed && !settled) { settled = true; setResumeData(getBundledData()); setIsLoading(false); }
           })
           .catch(() => setIsLoading(false));
       }
@@ -124,11 +97,12 @@ export default function OrbitalPortfolio() {
     };
     window.addEventListener("switchToListView", handleSwitchToListView);
     return () => {
+      disposed = true;
       window.removeEventListener("switchToListView", handleSwitchToListView);
       clearTimeout(timeoutId);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [setReducedMotion, setUseListView, setResumeData]);
+  }, [setUseListView, setResumeData]);
 
   const handleNodeClick = (index: number) => {
     const sections = ["Introduction", "Experience", "Projects", "Skills", "Contact"];
@@ -136,28 +110,10 @@ export default function OrbitalPortfolio() {
     focusNode(index);
   };
 
-  const handleNodeHover = (index: number | null) => {
-    setHoveredIndex(index);
-    if (index !== null) {
-      const sections = ["Introduction", "Experience", "Projects", "Skills", "Contact"];
-      announceToScreenReader(`Hovering over ${sections[index]}`);
-    }
-  };
-
   /* Keyboard nav (disabled in List View) */
   useKeyboardNavigation(
     useListView
-      ? {
-          onArrowLeft: noop,
-          onArrowRight: noop,
-          onArrowUp: noop,
-          onArrowDown: noop,
-          onEnter: noop,
-          onEscape: noop,
-          onSpace: noop,
-          onHome: noop,
-          onEnd: noop,
-        }
+      ? {}
       : {
           onArrowLeft: () => navigateToNode("prev"),
           onArrowRight: () => navigateToNode("next"),
@@ -191,14 +147,10 @@ export default function OrbitalPortfolio() {
         handleNodeClick(hoveredIndex);
       }
     },
-    // intentionally NO onScroll — wheel is blocked in Orbital, free in List
-  });
+    // Keep gestures off content panels and Scroll view.
+  }, viewMode === "orbital" && !activeNode);
 
-  const panelData = resumeData ? mapContentToPanels(resumeData) : null;
-  const currentPanelData =
-    focusedIndex >= 0 && panelData ? Object.values(panelData)[focusedIndex] : null;
-
-  if (isLoading || !resumeData) {
+  if (isLoading || !resumeData || !preferencesReady) {
     return (
       <div className="min-h-screen bg-black text-white flex items-center justify-center">
         <div className="text-center space-y-4">
@@ -211,31 +163,17 @@ export default function OrbitalPortfolio() {
   }
 
   /* LIST VIEW */
-  if (useListView) {
+  if (viewMode === "scroll") {
     return (
       <div className="relative bg-[#0b1220] text-white touch-auto overscroll-auto min-h-screen">
         <SkipLinks />
         <FocusIndicator />
-        <AccessibilityPanel />
+        {process.env.NODE_ENV === "development" && <AccessibilityPanel />}
 
-        <div className="fixed top-4 right-4 z-50">
-          <button
-            onClick={() => setUseListView(false)}
-            className="px-4 py-2 bg-white/10 text-white rounded-lg hover:bg-white/20 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-400"
-            aria-describedby="orbital-view-desc"
-          >
-            Switch to Orbital View
-          </button>
-          <div id="orbital-view-desc" className="sr-only">
-            Switch to 3D orbital navigation view. Not recommended for users with motion
-            sensitivity.
-          </div>
-        </div>
+        <Hud />
 
         <main id="main-content" className="touch-auto overscroll-auto">
-          <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-10 space-y-10">
-            <ListView data={resumeData} />
-          </div>
+          <ListView data={resumeData} />
         </main>
       </div>
     );
@@ -270,40 +208,16 @@ export default function OrbitalPortfolio() {
             setTimeout(() => setUseListView(true), 2000);
           }}
         >
-          <Scene
-            focusedIndex={focusedIndex}
-            onNodeClick={handleNodeClick}
-            onNodeHover={handleNodeHover}
-          />
+          <Scene />
         </ErrorBoundary>
       </div>
 
       <SkipLinks />
       <FocusIndicator />
-      <AccessibilityPanel />
-      <CMSStatus />
-      <PerformanceHUD />
+      {process.env.NODE_ENV === "development" && <AccessibilityPanel />}
+      {process.env.NODE_ENV === "development" && <><CMSStatus /><PerformanceHUD /></>}
 
-      <div className="fixed top-4 right-4 z-50">
-        <button
-          onClick={() => setUseListView(true)}
-          className="px-4 py-2 bg-white/10 text-white rounded-lg hover:bg-white/20 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-400"
-          aria-describedby="list-view-desc"
-        >
-          List View
-        </button>
-        <div id="list-view-desc" className="sr-only">
-          Switch to accessible list view with all content in a traditional format
-        </div>
-      </div>
-
-      <nav id="navigation" aria-label="Portfolio sections">
-        <Hud
-          focusedIndex={focusedIndex}
-          hoveredIndex={hoveredIndex}
-          onNodeClick={handleNodeClick}
-        />
-      </nav>
+      <Hud />
 
       <div
         id="instructions"
@@ -317,9 +231,7 @@ export default function OrbitalPortfolio() {
         </p>
       </div>
 
-      {currentPanelData && (
-        <Panel data={currentPanelData} isOpen={isPanelOpen} onClose={closePanel} />
-      )}
+      <Panel />
 
       <div aria-live="polite" aria-atomic="true" className="sr-only" id="status-announcements" />
     </main>

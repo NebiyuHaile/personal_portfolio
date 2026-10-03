@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { AccessibilityTester, useAccessibilityPreferences } from "@/src/lib/accessibility"
 import { usePortfolioStore } from "@/src/store/portfolio"
 
@@ -8,7 +8,7 @@ export function AccessibilityPanel() {
   const [isOpen, setIsOpen] = useState(false)
   const [violations, setViolations] = useState<any[]>([])
   const preferences = useAccessibilityPreferences()
-  const { setReducedMotion, setUseListView } = usePortfolioStore()
+  const { setUseListView } = usePortfolioStore()
 
   const runAccessibilityTest = () => {
     const tester = AccessibilityTester.getInstance()
@@ -16,18 +16,11 @@ export function AccessibilityPanel() {
     setViolations(results)
   }
 
-  useEffect(() => {
-    if (preferences.reducedMotion) {
-      setReducedMotion(true)
-      setUseListView(true)
-    }
-  }, [preferences.reducedMotion, setReducedMotion, setUseListView])
-
   if (!isOpen) {
     return (
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 px-4 py-2 bg-blue-600/20 text-blue-300 rounded-lg hover:bg-blue-600/30 transition-colors text-sm border border-blue-600/30"
+        className="fixed bottom-16 left-1/2 transform -translate-x-1/2 z-50 px-4 py-2 bg-blue-600/20 text-blue-300 rounded-lg hover:bg-blue-600/30 transition-colors text-sm border border-blue-600/30"
         aria-label="Open accessibility panel"
       >
         Accessibility Tools
@@ -36,7 +29,7 @@ export function AccessibilityPanel() {
   }
 
   return (
-    <div className="fixed top-16 left-1/2 transform -translate-x-1/2 z-50 bg-black/90 text-white p-6 rounded-lg border border-white/20 max-w-md w-full mx-4">
+    <div className="fixed bottom-28 left-1/2 transform -translate-x-1/2 z-50 bg-black/90 text-white p-6 rounded-lg border border-white/20 max-w-md w-full mx-4">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-lg font-semibold">Accessibility Tools</h2>
         <button
